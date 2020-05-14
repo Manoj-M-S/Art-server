@@ -41,10 +41,8 @@ router.get(
 );
 
 router.get(
-  "/order/:orderId/:userId",
-  isSignedIn,
-  isAuthenticated,
-  isAdmin,
+  "/order/:orderId",
+
   getOrder
 );
 
