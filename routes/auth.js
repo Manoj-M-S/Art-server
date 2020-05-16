@@ -6,7 +6,7 @@ const {
   signout,
   signup,
   signin,
-  isSignedIn
+  isSignedIn,
 } = require("../controllers/authentication");
 const { check } = require("express-validator");
 
@@ -16,13 +16,13 @@ router.post(
   "/signup",
   [
     //Validation
-    check("name", "Name should be atleast 3 Char").isLength({
-      min: 3
+    check("name", "Name should be atleast 3 Characters").isLength({
+      min: 3,
     }),
     check("email", "Enter valid email adress").isEmail(),
-    check("password", "Password should be of minimun 5 char ").isLength({
-      min: 5
-    })
+    check("password", "Password should be of minimun 5 Characters ").isLength({
+      min: 5,
+    }),
   ], //Controller
   signup
 );
@@ -32,8 +32,8 @@ router.post(
   [
     check("email", "Email is required").isEmail(),
     check("password", "Password is required ").isLength({
-      min: 1
-    })
+      min: 1,
+    }),
   ],
   signin
 );

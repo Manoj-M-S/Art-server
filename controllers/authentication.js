@@ -9,9 +9,9 @@ require("dotenv").config();
 //user signup route
 exports.signup = (req, res) => {
   // Finds the validation errors in this request and wraps them in an object with handy functions
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array()[0].msg });
+  const error = validationResult(req);
+  if (!error.isEmpty()) {
+    return res.status(422).json({ error: error.array()[0].msg });
   }
 
   //Saving user
@@ -19,13 +19,13 @@ exports.signup = (req, res) => {
   user.save((error, user) => {
     if (error) {
       return res.send(400).json({
-        error: "User not saved"
+        error: "User not saved",
       });
     }
     res.json({
       name: user.name,
       email: user.email,
-      id: user._id
+      id: user._id,
     });
   });
 };
@@ -33,22 +33,22 @@ exports.signup = (req, res) => {
 //user signin route
 exports.signin = (req, res) => {
   const { email, password } = req.body;
-  const errors = validationResult(req);
+  const error = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array()[0].msg });
+  if (!error.isEmpty()) {
+    return res.status(422).json({ error: error.array()[0].msg });
   }
 
   User.findOne({ email }, (error, user) => {
     if (error || !user) {
       return res.status(400).json({
-        error: "Email does not exists"
+        error: "Email does not exists",
       });
     }
 
     if (!user.authenticate(password)) {
       return res.status(401).json({
-        error: "Email and Password do not match"
+        error: "Email and Password do not match",
       });
     }
 
@@ -71,7 +71,7 @@ exports.signout = (req, res) => {
 //protected routes
 exports.isSignedIn = expressJwt({
   secret: process.env.SECRET,
-  userProperty: "authentication"
+  userProperty: "authentication",
 });
 
 //custom middlewares
@@ -83,7 +83,7 @@ exports.isAuthenticated = (req, res, next) => {
     req.profile._id == req.authentication._id;
   if (!checker) {
     return res.status(403).json({
-      error: "ACCESS DENIED"
+      error: "ACCESS DENIED",
     });
   }
   next();
@@ -93,7 +93,7 @@ exports.isAuthenticated = (req, res, next) => {
 exports.isAdmin = (req, res, next) => {
   if (req.profile.role === 0) {
     return res.status(403).json({
-      error: "You are not admin "
+      error: "You are not admin ",
     });
   }
   next();
