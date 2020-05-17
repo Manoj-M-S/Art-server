@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 const crypto = require("crypto");
-const uuidv1 = require("uuid/v1"); // what is this virtual and why is it used.
+const uuidv1 = require("uuid/v1");
 
 var userSchema = new mongoose.Schema(
   {
@@ -8,68 +8,66 @@ var userSchema = new mongoose.Schema(
       type: String,
       required: true,
       maxlength: 32,
-      trim: true
+      trim: true,
     },
     lastname: {
       type: String,
       maxlength: 32,
-      trim: true
+      trim: true,
     },
     email: {
       type: String,
       trim: true,
       required: true,
-      unique: true
+      unique: true,
     },
     encrypt_password: {
       type: String,
-      required: true
+      required: true,
     },
     userinfo: {
       type: String,
-      trim: true
+      trim: true,
     },
-    salt: String, // why salt cryptography
+    salt: String,
     role: {
       type: Number,
-      default: 0
+      default: 0,
     },
     purchases: {
       type: Array,
-      default: []
-    }
+      default: [],
+    },
   },
   { timestamps: true }
 );
 
-// what is this virtual thing and _password
 userSchema
   .virtual("password")
-  .set(function(password) {
+  .set(function (password) {
     this._password = password;
     this.salt = uuidv1();
     this.encrypt_password = this.securePassword(password);
   })
-  .get(function() {
+  .get(function () {
     return this._password;
   });
 
-//what are this methods
 userSchema.methods = {
-  authenticate: function(plainpassword) {
+  authenticate: function (plainpassword) {
     return this.securePassword(plainpassword) === this.encrypt_password;
   },
-  securePassword: function(plainpassword) {
-    if (!plainpassword) return ""; // why are you returning  a empty string.
+  securePassword: function (plainpassword) {
+    if (!plainpassword) return "";
     try {
       return crypto
-        .createHmac("sha256", this.salt) // what is sha256 is it general or universal ? and why
+        .createHmac("sha256", this.salt)
         .update(plainpassword)
-        .digest("hex"); // same with hex why is it used.
+        .digest("hex");
     } catch (error) {
       return "";
     }
-  }
+  },
 };
 
 module.exports = mongoose.model("User", userSchema);

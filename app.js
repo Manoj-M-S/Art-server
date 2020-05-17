@@ -27,7 +27,7 @@ mongoose.connect(process.env.ATLAS_URI, {
   useUnifiedTopology: true,
   useCreateIndex: true,
 });
-mongoose.Promise = global.Promise; //STUDY ABOUT all this
+mongoose.Promise = global.Promise;
 
 //Using middleware in app
 app.use(bodyParser.json());

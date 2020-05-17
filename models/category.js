@@ -4,15 +4,15 @@ const categorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      trim: true, // what is trim and why do we use it
+      trim: true,
       required: true,
       maxlength: 32,
-      unique: true
-    }
+      unique: true,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
-); //read about time stamps updated etc
+);
 
 module.exports = mongoose.model("Category", categorySchema);
